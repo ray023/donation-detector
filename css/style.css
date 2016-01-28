@@ -1,0 +1,14 @@
+ion-header-bar
+{
+    background-color: #D31245 !important;
+    color: white !important;
+}
+ion-header-bar .title
+{
+    color: white !important;
+}
+.lifesouth-divider
+{
+    background-color: #00529B !important;
+    color: white !important;
+}

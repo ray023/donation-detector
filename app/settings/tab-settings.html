@@ -1,0 +1,18 @@
+<ion-view view-title="Settings">
+    <ion-content>
+        <ion-list>
+            <div class="list">
+                <div class="item item-divider lifesouth-divider">
+                    Navigation: {{ data.userNavApp }}
+                </div>
+                <ion-radio ng-repeat="item in data.navOptions"
+                           ng-value="item.value"
+                           ng-model="data.userNavApp"
+                           ng-click="saveUserNavApp(item.value)"
+                           name="user_nav_app">
+                    <i class="{{ item.icon }}"></i> {{ item.text }}
+                </ion-radio>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-view>

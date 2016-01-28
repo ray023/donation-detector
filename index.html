@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>Donation Detector</title>
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <body ng-app="donationDetectorApplication">
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-view></ion-nav-view>
+
+    <script src="lib/js/ionic.bundle.min.js"></script>
+    <script src="cordova.js"></script>
+    <script src="app/app.js"></script>
+
+    <!-- Controllers -->
+    <script src="app/gps/ddGpsCtrl.js"></script>
+    <script src="app/centers/ddCenterCtrl.js"></script>
+    <script src="app/schedule/ddScheduleCtrl.js"></script>
+    <script src="app/settings/ddSettingsCtrl.js"></script>
+
+    <!-- Services -->
+    <script src="app/shared/services/ddLocationSvc.js"></script>
+    <script src="app/gps/ddGpsSvc.js"></script>
+    <script src="app/centers/ddCenterSvc.js"></script>
+    <script src="app/schedule/ddScheduleSvc.js"></script>
+    <script src="app/settings/ddSettingsSvc.js"></script>
+
+  </body>
+</html>
