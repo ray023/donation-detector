@@ -20,7 +20,13 @@ ddApp
 
                 Centers.getByLocation(position.coords.latitude, position.coords.longitude)
                     .then(function (centers) {
-                            $scope.data = {centerData: centers};
+                        var noCentersMsg = '';
+                            if (centers.length == 0)
+                                noCentersMsg = 'No donation centers could be found near your location.';
+                            $scope.data = {
+                                centerData: centers,
+                                noCentersMsg: noCentersMsg
+                            };
                             $scope.getDirections = getDirections;
                         },
                         function (statusCode) {

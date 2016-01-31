@@ -103,7 +103,14 @@ ddApp
 
                 Drives.getByLocation(position.coords.latitude, position.coords.longitude)
                     .then(function (drives) {
-                            $scope.data = {drives: getDrivesForScope(drives)};
+                            var noDrivesMsg = '';
+                            if (drives.length == 0)
+                                noDrivesMsg = 'No Blood Mobiles could be found near your location.';
+
+                            $scope.data = {
+                                drives: getDrivesForScope(drives),
+                                noDrivesMsg: noDrivesMsg
+                            };
                             $scope.getDirections = getDirections;
                         },
                         function (statusCode) {
