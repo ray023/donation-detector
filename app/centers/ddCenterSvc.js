@@ -28,7 +28,7 @@ ddApp
                         status: status,
                         headers: headers,
                         config: config
-                    }
+                    };
                     deferred.reject(errorObject);
                 });
                 return deferred.promise;
