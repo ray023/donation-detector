@@ -122,7 +122,7 @@ ddApp
                                 statusMessage = 'status: ' + errorObject.status + '\r\n' +
                                     'headers: ' + errorObject.headers + '\r\n' +
                                     'data: ' + errorObject.data + '\r\n' +
-                                    'config: ' + errorObject.config;
+                                    'config: ' + JSON.stringify(errorObject.config);
                             }
 
                             $ionicPopup.alert({
