@@ -12,11 +12,10 @@ ddApp
             getByLocation: function(latitude, longitude) {
                 var deferred  = $q.defer();
                 $ionicLoading.show({template: 'Loading...'});
-                var u = Settings.getCentersUrl() +
+                $http.get( Settings.getCentersUrl() +
                     '?latitude=' +
                     latitude + '&longitude=' +
-                    longitude;
-                $http.get( u ).
+                    longitude).
                 success(function(data,status,headers,config){
                     localStorage.setItem('centersByGps', JSON.stringify(data));
                     $ionicLoading.hide();
@@ -24,13 +23,7 @@ ddApp
                 }).
                 error(function(data,status,headers,config){
                     $ionicLoading.hide();
-                    var errorObject = {
-                        data: data,
-                        status: status,
-                        headers: headers,
-                        config: config
-                    };
-                    deferred.reject(errorObject);
+                    deferred.reject(status);
                 });
                 return deferred.promise;
             }

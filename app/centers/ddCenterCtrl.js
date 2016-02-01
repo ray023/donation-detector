@@ -29,20 +29,13 @@ ddApp
                             };
                             $scope.getDirections = getDirections;
                         },
-                        function (errorObject) {
-                            var statusMessage;
-                            if (errorObject.statusCode == '404')
+                        function (statusCode) {
+                            var statusMessage = 'Server Error:  ' + statusCode;
+                            if (statusCode == '404')
                                 statusMessage = 'Could not connect to server.  Please make sure you have network connectivity.';
-                            else
-                            {
-                                statusMessage = 'status: ' + errorObject.status + '\r\n' +
-                                                'headers: ' + errorObject.headers + '\r\n' +
-                                                'data: ' + errorObject.data + '\r\n' +
-                                                'config: ' + errorObject.config;
-                            }
 
                             $ionicPopup.alert({
-                                title: 'Server Error: ' + errorObject.statusCode,
+                                title: 'Server Error: ' + statusCode,
                                 okType: 'button-assertive',
                                 template: statusMessage
                             });

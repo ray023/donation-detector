@@ -23,13 +23,7 @@ ddApp
                 }).
                 error(function(data,status,headers,config){
                     $ionicLoading.hide();
-                    var errorObject = {
-                        data: data,
-                        status: status,
-                        headers: headers,
-                        config: config
-                    };
-                    deferred.reject(errorObject);
+                    deferred.reject(status);
                 });
                 return deferred.promise;
             }
