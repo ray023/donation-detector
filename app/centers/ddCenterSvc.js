@@ -12,10 +12,11 @@ ddApp
             getByLocation: function(latitude, longitude) {
                 var deferred  = $q.defer();
                 $ionicLoading.show({template: 'Loading...'});
-                $http.get( Settings.getCentersUrl() +
+                var u = Settings.getCentersUrl() +
                     '?latitude=' +
                     latitude + '&longitude=' +
-                    longitude).
+                    longitude;
+                $http.get( u ).
                 success(function(data,status,headers,config){
                     localStorage.setItem('centersByGps', JSON.stringify(data));
                     $ionicLoading.hide();

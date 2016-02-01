@@ -11,8 +11,8 @@ ddApp
 
         var LocalStorageConstants = {
             BOX_RESULT_COUNT: 'box_result_count',
-            DRIVES_DETECTOR_URL: 'http://o1solutionlifesouthdonorweb.azurewebsites.net/api/BloodMobileDrives/',
-            CENTERS_DETECTOR_URL: 'http://o1solutionlifesouthdonorweb.azurewebsites.net/api/DonationCenters/',
+            DRIVES_DETECTOR_URL: 'http://o1solutionlifesouthdonorweb.azurewebsites.net/api/BloodMobileDrives',
+            CENTERS_DETECTOR_URL: 'http://o1solutionlifesouthdonorweb.azurewebsites.net/api/DonationCenters',
             USER_NAV_APP: 'user_nav_app'
         };
 
