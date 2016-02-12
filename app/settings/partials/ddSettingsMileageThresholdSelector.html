@@ -1,0 +1,10 @@
+<div class="item item-divider lifesouth-divider">
+    Max Distance: {{ data.mileageThreshold }}
+</div>
+<ion-radio ng-repeat="item in data.mileageThresholdList"
+           ng-value="item.value"
+           ng-model="data.mileageThreshold"
+           ng-click="saveMileageThreshold(item.value)"
+           name="mileage_threshold_count">
+    {{ item.text }}
+</ion-radio>

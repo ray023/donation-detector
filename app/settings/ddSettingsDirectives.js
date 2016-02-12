@@ -4,3 +4,10 @@ ddApp.directive('ddSettingsNavigationSelector', function() {
         restrict: "E"
     }
 });
+
+ddApp.directive('ddSettingsMileageThresholdSelector', function() {
+    return {
+        templateUrl: "app/settings/partials/ddSettingsMileageThresholdSelector.html",
+        restrict: "E"
+    }
+});

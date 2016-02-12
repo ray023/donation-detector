@@ -3,10 +3,10 @@
         {{drive.title}}
     </div>
     <ion-list>
-        <ion-item class="item-remove-animate item-button-right" ng-repeat="item in drive.driveData " type="item-text-wrap" >
+        <ion-item class="item-remove-animate item-button-right" ng-repeat="item in drive.driveData | orderBy:['DaysTill','Miles','StartTime']" type="item-text-wrap" >
             <h2>{{item.Location}}</h2>
-            <p ng-hide="item.DaysTill < 2">Drive Date:  {{item.DriveDate  | date:'MM-dd'}}</p>
-            <p>Time:  {{item.StartTime  | date:'HH:mm'}} to {{item.EndTime | date:'HH:mm'}}</p>
+            <p ng-hide="item.DaysTill < 2">Drive Date:  {{item.DriveDate}}</p>
+            <p>Time:  {{item.StartTime}} to {{item.EndTime}}</p>
             <p>{{item.City}}, {{item.State}}</p>
             <p>Distance:  {{item.Miles | number: 1}} miles</p>
             <h2 ng-show="item.Status">Status:  <span class="{{item.StatusClass}}">{{item.Status}}</span></h2>

@@ -1,10 +1,10 @@
 <ion-list>
-    <ion-item class="item-remove-animate item-button-right" ng-repeat="center in data.centerData " type="item-text-wrap" >
+    <ion-item class="item-remove-animate item-button-right" ng-repeat="center in data.centerData | orderBy: 'Miles'"  type="item-text-wrap" >
         <h2>{{center.Location}}</h2>
         <p>{{center.Address}}</p>
         <p>{{center.City}}, {{center.State}}  {{center.Zip}}</p>
         <p>Distance:  {{center.Miles | number: 1}} miles</p>
-        <button class="button" ng-hide="center.DaysTill" ng-click="getDirections('{{center.NavLink}}')">
+        <button class="button" ng-click="getDirections('{{center.NavLink}}')">
             <i class="icon ion-navigate"></i>
         </button>
     </ion-item>
