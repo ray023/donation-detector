@@ -4,6 +4,7 @@
         <p>{{center.Address}}</p>
         <p>{{center.City}}, {{center.State}}  {{center.Zip}}</p>
         <p>Distance:  {{center.Miles | number: 1}} miles</p>
+        <p>Today's Hours:  {{center.StartTime | date:'h:mm'}} to {{center.EndTime | date:'h:mm'}}</p>
         <button class="button" ng-click="getDirections('{{center.NavLink}}')">
             <i class="icon ion-navigate"></i>
         </button>

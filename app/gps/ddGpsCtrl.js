@@ -20,21 +20,18 @@ ddApp
 
             function getDriveStatus(driveObject)
             {
+
                 var returnStatus,
-                    driveStartHour = driveObject.StartHour,
-                    driveStartMinute = driveObject.StartMinute,
-                    driveEndHour = driveObject.EndHour,
-                    driveEndMinute = driveObject.EndMinute,
-                    deviceHour = new Date().getHours(),
-                    deviceMinute = new Date().getMinutes();
-                if(driveStartHour > deviceHour || (driveStartHour == deviceHour && driveStartMinute > deviceMinute))
+                    deviceCurrentDate = new Date();
+
+                if(deviceCurrentDate.getTime() - driveObject.StartTime  < 0)
                 {
                     returnStatus = {
-                        Status: 'Has not started',
+                        Status: 'Has not started' ,
                         StatusClass: 'energized'
                     };
                 }
-                else if (driveEndHour < deviceHour || (driveEndHour == deviceHour && driveEndMinute < deviceMinute))
+                else if (deviceCurrentDate.getTime() - driveObject.EndTime > 0)
                 {
                     returnStatus = {
                         Status: 'Expired',
@@ -98,32 +95,49 @@ ddApp
 
                 return drivesForScope;
             }
+            function getByLocation_success(drives)
+            {
+                var noDrivesMsg = '';
+                if (drives.length == 0)
+                    noDrivesMsg = 'No Blood Mobiles could be found near your location.';
 
+                $scope.data = {
+                    drives: getDrivesForScope(drives),
+                    noDrivesMsg: noDrivesMsg
+                };
+
+            }
+            function getByLocation_fail(statusCode)
+            {
+                var statusMessage = 'Server Error:  ' + statusCode;
+                if (statusCode == '404')
+                    statusMessage = 'Could not connect to server.  Please make sure you have network connectivity.';
+
+                $ionicPopup.alert({
+                    title: 'Server Error: ' + statusCode,
+                    okType: 'button-assertive',
+                    template: statusMessage
+                });
+            }
             var success_callback = function(position){
+                var today_index = 0,
+                        tomorrow_index = 1,
+                        day_after_tomorrow_index = 2;
+                $scope.getDirections = getDirections;
 
-                Drives.getByLocation(position.coords.latitude, position.coords.longitude)
-                    .then(function (drives) {
-                            var noDrivesMsg = '';
-                            if (drives.length == 0)
-                                noDrivesMsg = 'No Blood Mobiles could be found near your location.';
-
-                            $scope.data = {
-                                drives: getDrivesForScope(drives),
-                                noDrivesMsg: noDrivesMsg
-                            };
-                            $scope.getDirections = getDirections;
-                        },
-                        function (statusCode) {
-                            var statusMessage = 'Server Error:  ' + statusCode;
-                            if (statusCode == '404')
-                                statusMessage = 'Could not connect to server.  Please make sure you have network connectivity.';
-
-                            $ionicPopup.alert({
-                                title: 'Server Error: ' + statusCode,
-                                okType: 'button-assertive',
-                                template: statusMessage
-                            });
-                        });
+                Drives.getByLocation(position.coords.latitude, position.coords.longitude, today_index)
+                        .then(function (todaysDrives) {
+                            Drives.getByLocation(position.coords.latitude, position.coords.longitude, tomorrow_index)
+                                .then(function (tomorrowsDrives) {
+                                    Drives.getByLocation(position.coords.latitude, position.coords.longitude, day_after_tomorrow_index )
+                                        .then(function (dayAfterTomorrowDrives) {
+                                            var drives = todaysDrives
+                                                            .concat(tomorrowsDrives)
+                                                            .concat(dayAfterTomorrowDrives);
+                                            getByLocation_success(drives);
+                                        })
+                                })
+                    },function (statusCode) {getByLocation_fail(statusCode)});
             };
 
             var error_callback = function(error){

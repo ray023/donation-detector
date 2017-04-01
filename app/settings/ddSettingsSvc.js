@@ -11,8 +11,8 @@ ddApp
 
         var LocalStorageConstants = {
             MILEAGE_THRESHOLD: 'mileage_threshold',
-            DRIVES_DETECTOR_URL: 'http://hemaps.com/lifesouth/getbloodmobilelocations.php/',
-            CENTERS_DETECTOR_URL: 'http://hemaps.com/lifesouth/getdonorcenterlocations.php/',
+            DRIVES_DETECTOR_URL: 'https://lifesouth.hmnx.us/map/locations',
+            CENTERS_DETECTOR_URL: 'https://lifesouth.hmnx.us/map/locations',
             USER_NAV_APP: 'user_nav_app'
         };
 

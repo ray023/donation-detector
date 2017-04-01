@@ -10,29 +10,42 @@ ddApp
     .factory('Centers', function($http, $q, Settings, $ionicLoading) {
         return {
             getByLocation: function(latitude, longitude) {
-                var deferred  = $q.defer();
+                var deferred  = $q.defer(),
+                                TODAY_ONLY = 0;
+                var myParams = {
+                    dateof: moment().startOf("day").add(TODAY_ONLY, "days").unix(),
+                    tzoffset: moment().format("ZZ")
+                };
                 $ionicLoading.show({template: 'Loading...'});
-                $http.get( Settings.getCentersUrl() +
-                    '?latitude=' +
-                    latitude + '&longitude=' +
-                    longitude).
+
+                $http({
+                    url: Settings.getCentersUrl(),
+                    method: 'POST',
+                    data:  myParams
+                }).
                 success(function(data,status,headers,config){
                     var centers = [];
-                    for (var i = 0; i < data.CENTERID.length; i++) {
-                        var driveDistance = Settings.getDistance(latitude, longitude, data.LATITUDE[i], data.LONGITUDE[i]);
+
+                    for (var i = 0; i < data.length; i++) {
+                        var driveDistance = Settings.getDistance(latitude, longitude, data[i].latitude, data[i].longitude);
 
                         if (driveDistance > Settings.getMileageThreshold())
                             continue;
 
+                        if (data[i].name.indexOf('Center') == -1)
+                            continue;
+
                         var center = {
-                            CenterId: data.CENTERID[i],
-                            Location: data.LOCATION[i],
-                            NavLink: 'http://maps.google.com/?saddr=' + latitude + ',' + longitude + '&daddr=' + data.LATITUDE[i] + ',' + data.LONGITUDE[i],
-                            Address: data.ADDRESS[i],
-                            City: data.CITY[i],
-                            State: data.STATE[i],
-                            Zip: data.ZIP[i],
-                            Miles: driveDistance
+                            CenterId: data[i].id,
+                            Location: data[i].name,
+                            NavLink: 'http://maps.google.com/?saddr=' + latitude + ',' + longitude + '&daddr=' + data[i].latitude + ',' + data[i].longitude,
+                            Address: data[i].street1,
+                            City: data[i].city,
+                            State: data[i].state,
+                            Zip: data[i].zipcode,
+                            Miles: driveDistance,
+                            StartTime: new Date(data[i].from_time * 1000),
+                            EndTime: new Date(data[i].thru_time * 1000)
                         };
                         centers.push(center);
                     }

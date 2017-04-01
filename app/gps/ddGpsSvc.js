@@ -9,74 +9,52 @@ ddApp
 
     .factory('Drives', function ($http, $q, Settings, $ionicLoading) {
 
-        function findDaysTill(todaysDateAndTime, driveDateAndTime) {
-            var DAY_FACTOR = 1000 * 60 * 60 * 24,
-                ALWAYS_12_TO_ACCOUNT_FOR_TIMEZONE = 12,
-                d1 = new Date(todaysDateAndTime.FullYear,
-                    todaysDateAndTime.Month - 1,
-                    todaysDateAndTime.Day,
-                    ALWAYS_12_TO_ACCOUNT_FOR_TIMEZONE);
-            var d2 = new Date(driveDateAndTime.FullYear,
-                    driveDateAndTime.Month - 1,
-                    driveDateAndTime.Day,
-                    ALWAYS_12_TO_ACCOUNT_FOR_TIMEZONE);
-            return (d2 - d1) / DAY_FACTOR;
-        }
-        function formatDriveTime(driveTime)
-        {
-            var split = driveTime.split(':'),
-                hour = split[0] < 12 ? split[0] : split[0] - 12,
-                meridiem = split[0] < 12 ? 'am' : 'pm';
-            return hour + ':' + split[1] + ' ' + meridiem;
-        }
-
         return {
-            getByLocation: function (latitude, longitude) {
+            getByLocation: function (latitude, longitude, day_of) {
                 var deferred = $q.defer();
+                var myParams = {
+                    dateof: moment().startOf("day").add(day_of, "days").unix(),
+                    tzoffset: moment().format("ZZ")
+                };
+
                 $ionicLoading.show({template: 'Loading...'});
-                $http.get(Settings.getDrivesUrl()).success(function (data, status, headers, config) {
+                $http({
+                        url: Settings.getDrivesUrl(),
+                        method: 'POST',
+                        data:  myParams
+                    }).success(function (data, status, headers, config) {
+                    var drives = [];
 
-                    var drives = [],
-                        tempToday = new Date(),
-                        todaysDateAndTime = {
-                            Month: tempToday.getMonth() + 1,
-                            Day: tempToday.getDate(),
-                            FullYear: tempToday.getFullYear()
-                        };
+                    for (var i = 0; i < data.length; i++) {
 
-                    for (var i = 0; i < data.DRIVEID.length; i++) {
-                        var startTimeSplit = data.STARTTIME[i].split(':'),
-                            endTimeSplit = data.ENDTIME[i].split(':'),
-                            splitDate = data.DRIVEDATE[i].split('-'),
-                            driveDateAndTime = {
-                                Month: splitDate[1],
-                                Day: splitDate[2],
-                                FullYear: splitDate[0]
-                            },
-                            daysTill = findDaysTill(todaysDateAndTime, driveDateAndTime),
-                            driveDistance = Settings.getDistance(latitude, longitude, data.LATITUDE[i], data.LONGITUDE[i]);
+                        if (data[i].name.indexOf('Center') !== -1)
+                            continue;
 
-                        if (daysTill < 0 || driveDistance > Settings.getMileageThreshold())
+
+                        var tempDriveStartDate = new Date(data[i].from_time * 1000),
+                            tempDriveEndDate = new Date(data[i].thru_time * 1000),
+                            daysTill = day_of,
+                            driveDistance = Settings.getDistance(latitude, longitude, data[i].latitude, data[i].longitude);
+
+
+                        if (driveDistance > Settings.getMileageThreshold())
                             continue;
 
                         var drive = {
-                            DriveId: data.DRIVEID[i],
-                            DriveDate: data.DRIVEDATE[i],
-                            StartTime: formatDriveTime(data.STARTTIME[i]),
-                            EndTime: formatDriveTime(data.ENDTIME[i]),
-                            Location: data.LOCATION[i],
-                            NavLink: 'http://maps.google.com/?saddr=' + latitude + ',' + longitude + '&daddr=' + data.LATITUDE[i] + ',' + data.LONGITUDE[i],
-                            Address: data.ADDRESS[i],
-                            City: data.CITY[i],
-                            State: data.STATE[i],
-                            Zip: data.ZIP[i],
+                            DriveId: data[i].id,
+                            DriveDate: tempDriveStartDate,
+                            StartTime: tempDriveStartDate.getTime(),
+                            EndTime: tempDriveEndDate.getTime(),
+                            Location: data[i].name,
+                            NavLink: 'http://maps.google.com/?saddr=' + latitude + ',' + longitude + '&daddr=' + data[i].latitude + ',' + data[i].longitude,
+                            Address: data[i].street1,
+                            City: data[i].city,
+                            State: data[i].state,
+                            Zip: data[i].zipcode,
                             Miles: driveDistance,
-                            DaysTill: daysTill,
-                            StartHour: startTimeSplit[0],
-                            StartMinute: startTimeSplit[1],
-                            EndHour: endTimeSplit[0],
-                            EndMinute: endTimeSplit[1]
+                            DaysTill: day_of
                         };
+
                         drives.push(drive);
                     }
                     $ionicLoading.hide();
