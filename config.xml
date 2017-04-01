@@ -37,7 +37,9 @@
     <plugin name="cordova-plugin-device"  />
     <plugin name="cordova-plugin-statusbar" />
     <plugin name="cordova-plugin-whitelist" />
-    <plugin name="cordova-plugin-calendar" />
+    <plugin name="cordova-plugin-calendar">
+		<variable name="CALENDAR_USAGE_DESCRIPTION" value="Allows user to schedule their next donation" />
+	</plugin>
     <icon src="icon.png" />
     <platform name="android">
         <icon density="ldpi" src="res/icon/android/drawable-ldpi-icon.png" />
